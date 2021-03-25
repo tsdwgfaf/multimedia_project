@@ -1,0 +1,12 @@
+server:
+  port: 16003
+  servlet:
+    context-path: /mdp
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 0
+
+      max-file-size: -1
+      max-request-size: -1

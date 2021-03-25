@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>分块信息</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <script type="text/javascript" src="../js/jquery-3.6.0.min.js"></script>
+    <style>
+        form {
+            margin-top: 24px;
+        }
+        .layui-input-block {
+            margin-right: 16px;
+        }
+    </style>
+</head>
+<body>
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">水平</label>
+            <div class="layui-input-block">
+                <input id="x-blocks" type="number" name="x_blocks" required  lay-verify="required" placeholder="请输入正整数" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">垂直</label>
+            <div class="layui-input-block">
+                <input id="y-blocks" type="number" name="_blocks" required  lay-verify="required" placeholder="请输入正整数" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript" src="../layui/layui.js"></script>
+    <script>
+        //Demo
+        layui.use('form', function(){
+            var form = layui.form;
+            var layer = layui.layer;
+        });
+    </script>
+</body>
+</html>

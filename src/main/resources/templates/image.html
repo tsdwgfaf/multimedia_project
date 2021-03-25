@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Image</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <script type="text/javascript" src="../js/jquery-3.6.0.min.js"></script>
+    <style>
+        .upload {
+            width: 95%;
+            height: 50px;
+            margin: 20px auto 20px auto;
+            padding-top: 10px;
+        }
+        .pic-title {
+            font-family: 新宋体,serif;
+            font-size: 22px;
+            margin-top: 4px;
+            margin-bottom: 8px;
+        }
+        .btn-group {
+            margin-top: 24px;
+        }
+    </style>
+</head>
+<body>
+<!--顶部导航栏-->
+<div>
+    <ul class="layui-nav layui-bg-blue" lay-filter="">
+        <li class="layui-nav-item layui-this layui-col-md-offset1"><a href="">图像处理</a></li>
+        <li class="layui-nav-item"><a href="">音频处理</a></li>
+        <!--        <li class="layui-nav-item">-->
+        <!--            <a href="javascript:;">解决方案</a>-->
+        <!--            <dl class="layui-nav-child"> &lt;!&ndash; 二级菜单 &ndash;&gt;-->
+        <!--                <dd><a href="">移动模块</a></dd>-->
+        <!--                <dd><a href="">后台模版</a></dd>-->
+        <!--                <dd><a href="">电商平台</a></dd>-->
+        <!--            </dl>-->
+        <!--        </li>-->
+    </ul>
+</div>
+<div class="layui-col-md10 layui-col-md-offset1">
+    <div class="layui-upload-drag upload" id="upload-square">
+        <i class="layui-icon"></i>
+        <p>点击上传，或将文件拖拽到此处</p>
+    </div>
+    <div class="layui-col-md6">
+        <div class="layui-hide" id="uploadView">
+            <div class="pic-title">原图</div>
+            <img src="" alt="上传成功后渲染" style="max-width: 600px">
+        </div>
+        <div class="btn-group">
+            <button class="layui-btn layui-btn-radius layui-btn-primary" id="btn-to-gray">转灰度图</button>
+            <button class="layui-btn layui-btn-radius " id="btn-to-green">转单通道(绿)</button>
+            <button class="layui-btn layui-btn-radius layui-btn-danger" id="btn-to-red">转单通道(红)</button>
+            <button class="layui-btn layui-btn-radius layui-btn-normal" id="btn-to-blue">转单通道(蓝)</button>
+        </div>
+        <div class="btn-group">
+            <button class="layui-btn layui-btn-radius layui-btn-normal" id="btn-to-random">分块置乱</button>
+        </div>
+    </div>
+    <div class="layui-col-md6">
+        <div class="layui-hide" id="progressView">
+            <div class="pic-title">处理后</div>
+            <img src="" alt="图片处理结果" style="max-width: 600px">
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../layui/layui.js"></script>
+<script>
+    //导航依赖 element 模块，否则无法进行功能性操作
+    layui.use('element', function(){
+        var element = layui.element;
+        //...
+    });
+</script>
+<script>
+    layui.use('upload', function(){
+        var $ = layui.jquery
+            ,upload = layui.upload;
+        //拖拽上传
+        upload.render({
+            elem: '#upload-square'
+            ,url: 'upload' //改成您自己的上传接口
+            ,accept: 'images'
+            ,size: 50000
+            ,before: function(obj){
+                obj.preview(function(index, file, result){
+                    layui.$('#uploadView').removeClass('layui-hide').find('img').attr('src', result);
+                });
+            }
+            ,done: function(res) {
+                layer.msg('上传成功');
+                console.log(res);
+            }
+        });
+    });
+    layui.use('jquery', function (){
+        var $ = layui.jquery;
+        $("#btn-to-gray").click(function() {
+            var index = layer.load(1, {
+                shade: [0.3,'#fff'] //0.1透明度的白色背景
+            });
+            $.get('togray', function (data, status) {
+                // window.console.log(data)
+                // window.console.log(status);
+                layer.close(index);
+                if (data.code === 0) { //请求成功
+                    layer.msg('转换成功');
+                    layui.$('#progressView').removeClass('layui-hide').find('img')
+                        .attr('src', "data:image/png;base64," + data.data);
+                }
+            })
+        });
+        $("#btn-to-green").click(function() {
+            var index = layer.load(1, {
+                shade: [0.3,'#fff'] //0.1透明度的白色背景
+            });
+            $.get('togreen', function (data, status) {
+                layer.close(index);
+                if (data.code === 0) { //请求成功
+                    layer.msg('转换成功');
+                    layui.$('#progressView').removeClass('layui-hide').find('img')
+                        .attr('src', "data:image/png;base64," + data.data);
+                }
+            })
+        });
+        $("#btn-to-blue").click(function() {
+            var index = layer.load(1, {
+                shade: [0.3,'#fff'] //0.1透明度的白色背景
+            });
+            $.get('toblue', function (data, status) {
+                layer.close(index);
+                if (data.code === 0) { //请求成功
+                    layer.msg('转换成功');
+                    layui.$('#progressView').removeClass('layui-hide').find('img')
+                        .attr('src', "data:image/png;base64," + data.data);
+                }
+            })
+        });
+        $("#btn-to-red").click(function() {
+            var index = layer.load(1, {
+                shade: [0.3,'#fff'] //0.1透明度的白色背景
+            });
+            $.get('tored', function (data, status) {
+                layer.close(index);
+                if (data.code === 0) { //请求成功
+                    layer.msg('转换成功');
+                    layui.$('#progressView').removeClass('layui-hide').find('img')
+                        .attr('src', "data:image/png;base64," + data.data);
+                }
+            })
+        });
+        $("#btn-to-random").click(function () {
+            var opDom = $(this);
+            var param = {
+                preplanId:-1
+            };
+            showPop(param,opDom);
+        })
+        /*layer弹出页面层*/
+        function showPop(param,opDom){
+            layer.open({
+                type:2,
+                title:'选择分块数',
+                area:['300px','240px'],
+                content:"randomconfig",
+                //是否显示右上角关闭图标，默认为1，显示
+                closeBtn:0,
+                btn: ['确定', '取消'],
+                //按钮对应点击事件回调通知
+                yes:function(index, layero){
+                    // //异常捕获，避免页面因js错误而终止运行
+                    // try{
+                    //     //成功回调，从当前界面dom缓存中获取子层保存的数据
+                    //     param.preplanId = parseInt(opDom.data('preplanId'));
+                    //     if(param.preplanId <= 0 || isNaN(param.preplanId)){
+                    //         layer.alert("失败 ");
+                    //         return false;
+                    //     }
+                    //     startPlan(param);
+                    //     opDom.data('preplanId',-1);
+                    // }catch(e){
+                    //     console.log(e);
+                    //     layer.alert("参数错误！");
+                    //     opDom.removeData("preplanId");
+                    //     return false;
+                    // }
+                    body = layer.getChildFrame('body', index);//绑定父子之间的关系，用于数据传递
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象
+                    //获取表单数据
+                    var xBlocks = iframeWin.document.getElementById('x-blocks').value;
+                    var yBlocks = iframeWin.document.getElementById('y-blocks').value;
+                    layer.close(index);
+                    if (!(xBlocks > 0 && yBlocks > 0 )) {
+                        layer.msg("数据格式错误——分割块数必须为正整数")
+                    } else {
+                        var loadingIndex = layer.load(1, {
+                            shade: [0.3,'#fff'] //0.1透明度的白色背景
+                        });
+                    }
+                    $.ajax({
+                        type: 'POST'
+                        , url: 'random'
+                        , data:{
+                            x_blocks: xBlocks
+                            , y_blocks: yBlocks
+                        }
+                        , success: function (data) {
+                            layer.close(loadingIndex);
+                            if (data.code === 0) { //请求成功
+                                layer.msg('转换成功');
+                                layui.$('#progressView').removeClass('layui-hide').find('img')
+                                    .attr('src', "data:image/png;base64," + data.data);
+                            }
+                        }
+                    })
+                    // $.post('random', function (data, status) {
+                    //     if (data.code === 0) { //请求成功
+                    //         layer.msg('转换成功');
+                    //         layui.$('#progressView').removeClass('layui-hide').find('img')
+                    //             .attr('src', "data:image/png;base64," + data.data);
+                    //     }
+                    // })
+                    layer.close(index);
+                },
+                btn2:function(index, layero){
+                    layer.close(index);
+                    opDom.data('preplanId',-1);
+                }
+            });
+        }
+
+    })
+</script>
+</body>
+</html>
