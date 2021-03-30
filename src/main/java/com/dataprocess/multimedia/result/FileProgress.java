@@ -24,14 +24,16 @@ public class FileProgress {
                                             + File.separator + "static";
     public static final String imagePathUploaded = staticPath + File.separator + "image" + File.separator + "uploaded";
     public static final String imagePathResult = staticPath + File.separator + "image" + File.separator + "transformed";
+    public static final String voicePathUploaded = staticPath + File.separator + "voice" + File.separator + "uploaded";
+    public static final String voicePathTransformed = staticPath + File.separator + "voice" + File.separator + "transformed";
     public static final String pyPath = System.getProperty("user.dir")
-            + File.separator + "src"
-            + File.separator + "main"
-            + File.separator + "java"
-            + File.separator + "com"
-            + File.separator + "dataprocess"
-            + File.separator + "multimedia"
-            + File.separator + "python";
+                                        + File.separator + "src"
+                                        + File.separator + "main"
+                                        + File.separator + "java"
+                                        + File.separator + "com"
+                                        + File.separator + "dataprocess"
+                                        + File.separator + "multimedia"
+                                        + File.separator + "python";
 
 
     public static String rename(String fileName) {
@@ -48,6 +50,21 @@ public class FileProgress {
     public static String saveImage(MultipartFile file) {
         String fileName = rename(Objects.requireNonNull(file.getOriginalFilename()));
         String savePath = imagePathUploaded + File.separator + fileName;
+        File saveFile = new File(savePath);
+        if (!saveFile.exists()) {
+            saveFile.mkdirs();
+        }
+        try {
+            file.transferTo(saveFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return savePath;
+    }
+
+    public static String saveVoice(MultipartFile file) {
+        String fileName = rename(Objects.requireNonNull(file.getOriginalFilename()));
+        String savePath = voicePathUploaded + File.separator + fileName;
         File saveFile = new File(savePath);
         if (!saveFile.exists()) {
             saveFile.mkdirs();
